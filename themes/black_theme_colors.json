@@ -1,0 +1,12 @@
+{
+  "background": "0xFF363640",
+  "app_bar": "0xFF363640",
+  "app_bar_text": "0xFFFFFFFF",
+  "app_bar_button": "0x99FFFFFF",
+  "transform_other_button": "0xFF2F37D6",
+  "transform_other_button_text": "0xFFFFFFFF",
+  "copy_button": "0xFF2F37D6",
+  "copy_button_text": "0xFFFFFFFF",
+  "text_form_input": "0x3FFFFFFF",
+  "text_form_input_text": "0xFFFFFFFF"
+}
