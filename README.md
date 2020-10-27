@@ -2,6 +2,9 @@
 
 A new Flutter application.
 
+## Google play
+https://play.google.com/store/apps/details?id=com.carpet.nicknamer&hl=ru
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
