@@ -1,5 +1,7 @@
 # Files contain passwords
 /android/key.properties
+# Keystore
+/android/upload-keystore.jks
 
 # Miscellaneous
 *.class
