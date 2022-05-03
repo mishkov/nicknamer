@@ -194,9 +194,9 @@ class _MyHomePageState extends State<MyHomePage> {
       var symbolInLowerCase = originalName[i].toLowerCase();
       if (_lowercaseSymbols.containsKey(symbolInLowerCase)) {
         if (isNextSymbolInUppercase) {
-          nickname += _uppercaseSymbols[originalName[i]];
+          nickname += _uppercaseSymbols[symbolInLowerCase];
         } else {
-          nickname += _lowercaseSymbols[originalName[i]];
+          nickname += _lowercaseSymbols[symbolInLowerCase];
         }
         isNextSymbolInUppercase = !isNextSymbolInUppercase;
       } else {
@@ -215,9 +215,9 @@ class _MyHomePageState extends State<MyHomePage> {
       if (_lowercaseSymbols.containsKey(symbolInLowerCase)) {
         var isNextSymbolInUppercase = Random().nextBool();
         if (isNextSymbolInUppercase) {
-          nickname += _uppercaseSymbols[originalName[i]];
+          nickname += _uppercaseSymbols[symbolInLowerCase];
         } else {
-          nickname += _lowercaseSymbols[originalName[i]];
+          nickname += _lowercaseSymbols[symbolInLowerCase];
         }
       } else {
         nickname += originalName[i];
