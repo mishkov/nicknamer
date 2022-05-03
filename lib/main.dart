@@ -7,7 +7,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:nicknamer/custom_toast/custom_toast.dart';
 import 'package:nicknamer/services/admob_service.dart';
 import 'package:nicknamer/services/app_localizations.dart';
-import 'file:///C:/Users/misch/AndroidStudioProjects/nicknamer/lib/database/database.dart';
+import 'package:nicknamer/database/database.dart';
 import 'package:nicknamer/services/theme_controller.dart';
 
 Future<void> main() async {
