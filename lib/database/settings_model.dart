@@ -15,7 +15,7 @@ class Settings {
   }
 
   List<Map<String, dynamic>> toJson() {
-    var settingsList = List<Map<String, String>>();
+    List<Map<String, String>> settingsList = [];
 
     settings.forEach((key, value) {
       settingsList.add({
