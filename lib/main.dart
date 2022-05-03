@@ -5,6 +5,7 @@ import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:nicknamer/custom_toast/custom_toast.dart';
+import 'package:nicknamer/nick_maker.dart/nick_maker.dart';
 import 'package:nicknamer/services/admob_service.dart';
 import 'package:nicknamer/services/app_localizations.dart';
 import 'package:nicknamer/database/database.dart';
@@ -77,80 +78,6 @@ class _MyHomePageState extends State<MyHomePage> {
   final _adMobService = AdMobService();
   final _originalNameController = TextEditingController();
   final _readyNicknameController = TextEditingController();
-  final homePageKey = GlobalKey<ScaffoldState>();
-
-  final Map<String, String> _lowercaseSymbols = {
-    'а': 'a',
-    'б': '6',
-    'в': 'B',
-    'г': 'r',
-    'д': 'g',
-    'е': 'e',
-    'ё': 'e',
-    'ж': '7K',
-    'з': '3',
-    'и': 'u',
-    'й': 'u',
-    'к': 'k',
-    'л': 'Jl',
-    'м': 'M',
-    'н': 'H',
-    'о': 'o',
-    'п': 'TT',
-    'р': 'p',
-    'с': 'c',
-    'т': 'T',
-    'у': 'y',
-    'ф': 'olo',
-    'х': 'x',
-    'ц': 'LL',
-    'ч': '4',
-    'ш': 'LLl',
-    'щ': 'LLL',
-    'ъ': 'b',
-    'ы': 'bl',
-    'ь': 'b',
-    'э': '3',
-    'ю': 'lo',
-    'я': '9l',
-    ' ': '_'
-  };
-  final Map<String, String> _uppercaseSymbols = {
-    'а': 'A',
-    'б': '6',
-    'в': 'B',
-    'г': 'r',
-    'д': 'D',
-    'е': 'E',
-    'ё': 'E',
-    'ж': '7K',
-    'з': '3',
-    'и': 'u',
-    'й': 'u',
-    'к': 'K',
-    'л': 'Jl',
-    'м': 'M',
-    'н': 'H',
-    'о': 'O',
-    'п': 'TT',
-    'р': 'P',
-    'с': 'C',
-    'т': 'T',
-    'у': 'y',
-    'ф': 'olo',
-    'х': 'X',
-    'ц': 'LL',
-    'ч': '4',
-    'ш': 'LLl',
-    'щ': 'LLL',
-    'ъ': 'b',
-    'ы': 'bl',
-    'ь': 'b',
-    'э': '3',
-    'ю': 'lo',
-    'я': '9l',
-    ' ': '_',
-  };
 
   void onChangeThemeButtonClick() async {
     var currentTheme = await DBProvider.db.getSetting('Theme');
@@ -181,56 +108,19 @@ class _MyHomePageState extends State<MyHomePage> {
       );
 
   void onTransformOtherButtonClick() =>
-      generateReadyNameWithRandomSymbolCase(_originalNameController.text);
+      generateReadyName(_originalNameController.text);
 
   void onOriginalNameChanged(String originalName) =>
       generateReadyName(originalName);
 
   void generateReadyName(String originalName) {
-    String nickname = '';
-
-    bool isNextSymbolInUppercase = false;
-    for (var i = 0; i < originalName.length; i++) {
-      var symbolInLowerCase = originalName[i].toLowerCase();
-      if (_lowercaseSymbols.containsKey(symbolInLowerCase)) {
-        if (isNextSymbolInUppercase) {
-          nickname += _uppercaseSymbols[symbolInLowerCase];
-        } else {
-          nickname += _lowercaseSymbols[symbolInLowerCase];
-        }
-        isNextSymbolInUppercase = !isNextSymbolInUppercase;
-      } else {
-        nickname += originalName[i];
-      }
-    }
-
-    _readyNicknameController.text = nickname;
-  }
-
-  void generateReadyNameWithRandomSymbolCase(String originalName) {
-    String nickname = '';
-
-    for (var i = 0; i < originalName.length; i++) {
-      var symbolInLowerCase = originalName[i].toLowerCase();
-      if (_lowercaseSymbols.containsKey(symbolInLowerCase)) {
-        var isNextSymbolInUppercase = Random().nextBool();
-        if (isNextSymbolInUppercase) {
-          nickname += _uppercaseSymbols[symbolInLowerCase];
-        } else {
-          nickname += _lowercaseSymbols[symbolInLowerCase];
-        }
-      } else {
-        nickname += originalName[i];
-      }
-    }
-
-    _readyNicknameController.text = nickname;
+    _readyNicknameController.text =
+        NickMaker.instance.generateRandom(originalName);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: homePageKey,
       backgroundColor: ThemeController().getColor('background'),
       appBar: AppBar(
         title: Text(
