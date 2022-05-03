@@ -161,13 +161,13 @@ class _MyHomePageState extends State<MyHomePage> {
     await ThemeController().load(newTheme);
 
     if (newTheme == ThemeController.whiteTheme) {
-      showToast(homePageKey,
+      showToast(context,
           AppLocalizations.of(context).translate('white_mode_on_message'));
     } else if (newTheme == ThemeController.blackTheme) {
-      showToast(homePageKey,
+      showToast(context,
           AppLocalizations.of(context).translate('dark_mode_on_message'));
     } else {
-      showToast(homePageKey,
+      showToast(context,
           AppLocalizations.of(context).translate('android_theme_on_message'));
     }
 
