@@ -311,9 +311,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        RaisedButton(
-                          color: ThemeController()
-                              .getColor('transform_other_button'),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: ThemeController()
+                                .getColor('transform_other_button'),
+                          ),
                           child: Text(
                             AppLocalizations.of(context)
                                 .translate('transform_other_button'),
@@ -324,8 +326,10 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                           onPressed: onTransformOtherButtonClick,
                         ),
-                        RaisedButton(
-                          color: ThemeController().getColor('copy_button'),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: ThemeController().getColor('copy_button'),
+                          ),
                           child: Text(
                             AppLocalizations.of(context)
                                 .translate('copy_button'),
@@ -346,7 +350,8 @@ class _MyHomePageState extends State<MyHomePage> {
               child: AdmobBanner(
                 adUnitId: _adMobService.getMainPageBannerAdId(),
                 adSize: AdmobBannerSize.ADAPTIVE_BANNER(
-                    width: MediaQuery.of(context).size.width.toInt()),
+                  width: MediaQuery.of(context).size.width.toInt(),
+                ),
               ),
             ),
           ],
