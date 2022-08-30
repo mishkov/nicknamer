@@ -49,7 +49,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.carpet.nicknamer"
+        applicationId "com.mishkov.nicknamer"
         minSdkVersion 21
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()

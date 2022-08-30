@@ -3,7 +3,8 @@
 A new Flutter application.
 
 ## Google play
-https://play.google.com/store/apps/details?id=com.carpet.nicknamer&hl=ru
+
+https://play.google.com/store/apps/details?id=com.mishkov.nicknamer&hl=ru
 
 ## Getting Started
 

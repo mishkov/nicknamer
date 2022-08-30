@@ -1,4 +1,4 @@
-package com.carpet.nicknamer
+package com.mishkov.nicknamer
 
 import io.flutter.embedding.android.FlutterActivity
 
