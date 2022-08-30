@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -184,92 +186,104 @@ class _MyHomePageState extends State<MyHomePage> {
             Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 38),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    TextFormField(
-                      controller: _originalNameController,
-                      onChanged: onOriginalNameChanged,
-                      style: TextStyle(
-                        color:
-                            ThemeController().getColor('text_form_input_text'),
-                      ),
-                      decoration: InputDecoration(
-                        labelStyle: TextStyle(
-                            color: ThemeController()
-                                .getColor('text_form_input_text')),
-                        labelText: AppLocalizations.of(context)!
-                            .translate('original_name_text_form_field'),
-                        border: OutlineInputBorder(),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color:
-                                ThemeController().getColor('text_form_input'),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(top: 14, bottom: 46),
-                      child: TextFormField(
-                        controller: _readyNicknameController,
-                        style: TextStyle(
-                          color: ThemeController()
-                              .getColor('text_form_input_text'),
-                        ),
-                        decoration: InputDecoration(
-                          labelStyle: TextStyle(
-                              color: ThemeController()
-                                  .getColor('text_form_input_text')),
-                          labelText: AppLocalizations.of(context)!
-                              .translate('ready_nickname_text_form_field'),
-                          border: OutlineInputBorder(),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color:
-                                  ThemeController().getColor('text_form_input'),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: LayoutBuilder(builder: (context, constraints) {
+                  const maxContentWidth = 600.0;
+                  double contentWidth = math.min(
+                    maxContentWidth,
+                    constraints.maxWidth,
+                  );
+
+                  return SizedBox(
+                    width: contentWidth,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: ThemeController()
-                                .getColor('transform_other_button'),
+                        TextFormField(
+                          controller: _originalNameController,
+                          onChanged: onOriginalNameChanged,
+                          style: TextStyle(
+                            color: ThemeController()
+                                .getColor('text_form_input_text'),
                           ),
-                          child: Text(
-                            AppLocalizations.of(context)!
-                                .translate('transform_other_button')!,
-                            style: TextStyle(
-                              color: ThemeController()
-                                  .getColor('transform_other_button_text'),
+                          decoration: InputDecoration(
+                            labelStyle: TextStyle(
+                                color: ThemeController()
+                                    .getColor('text_form_input_text')),
+                            labelText: AppLocalizations.of(context)!
+                                .translate('original_name_text_form_field'),
+                            border: OutlineInputBorder(),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: ThemeController()
+                                    .getColor('text_form_input'),
+                              ),
                             ),
                           ),
-                          onPressed: onTransformOtherButtonClick,
                         ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: ThemeController().getColor('copy_button'),
-                          ),
-                          child: Text(
-                            AppLocalizations.of(context)!
-                                .translate('copy_button')!,
+                        Container(
+                          margin: EdgeInsets.only(top: 14, bottom: 46),
+                          child: TextFormField(
+                            controller: _readyNicknameController,
                             style: TextStyle(
                               color: ThemeController()
-                                  .getColor('copy_button_text'),
+                                  .getColor('text_form_input_text'),
+                            ),
+                            decoration: InputDecoration(
+                              labelStyle: TextStyle(
+                                  color: ThemeController()
+                                      .getColor('text_form_input_text')),
+                              labelText: AppLocalizations.of(context)!
+                                  .translate('ready_nickname_text_form_field'),
+                              border: OutlineInputBorder(),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: ThemeController()
+                                      .getColor('text_form_input'),
+                                ),
+                              ),
                             ),
                           ),
-                          onPressed: onCopyButtonClick,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: ThemeController()
+                                    .getColor('transform_other_button'),
+                              ),
+                              child: Text(
+                                AppLocalizations.of(context)!
+                                    .translate('transform_other_button')!,
+                                style: TextStyle(
+                                  color: ThemeController()
+                                      .getColor('transform_other_button_text'),
+                                ),
+                              ),
+                              onPressed: onTransformOtherButtonClick,
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary:
+                                    ThemeController().getColor('copy_button'),
+                              ),
+                              child: Text(
+                                AppLocalizations.of(context)!
+                                    .translate('copy_button')!,
+                                style: TextStyle(
+                                  color: ThemeController()
+                                      .getColor('copy_button_text'),
+                                ),
+                              ),
+                              onPressed: onCopyButtonClick,
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
-                ),
+                  );
+                }),
               ),
             ),
             defaultTargetPlatform == TargetPlatform.iOS ||
