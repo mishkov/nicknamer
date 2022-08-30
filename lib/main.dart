@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+
 import 'package:nicknamer/custom_toast/custom_toast.dart';
+import 'package:nicknamer/database/database.dart';
 import 'package:nicknamer/nick_maker.dart/nick_maker.dart';
 import 'package:nicknamer/services/admob_service.dart';
 import 'package:nicknamer/services/app_localizations.dart';
-import 'package:nicknamer/database/database.dart';
 import 'package:nicknamer/services/theme_controller.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  Admob.initialize();
+  MobileAds.instance.initialize();
 
   var theme = await DBProvider.db.getSetting('Theme');
   await ThemeController().load(theme);
@@ -76,6 +77,27 @@ class _MyHomePageState extends State<MyHomePage> {
   final _adMobService = AdMobService();
   final _originalNameController = TextEditingController();
   final _readyNicknameController = TextEditingController();
+  BannerAd homePageBanner;
+
+  @override
+  void initState() {
+    super.initState();
+
+    homePageBanner = BannerAd(
+      adUnitId: _adMobService.getTestBannerAdId(),
+      size: AdSize.getPortraitInlineAdaptiveBannerAdSize(
+        MediaQuery.of(context).size.width.toInt(),
+      ),
+      request: AdRequest(),
+      listener: BannerAdListener(),
+    );
+  }
+
+  @override
+  void dispose() {
+    homePageBanner.dispose();
+    super.dispose();
+  }
 
   void onChangeThemeButtonClick() async {
     var currentTheme = await DBProvider.db.getSetting('Theme');
@@ -235,11 +257,8 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             Container(
-              child: AdmobBanner(
-                adUnitId: _adMobService.getMainPageBannerAdId(),
-                adSize: AdmobBannerSize.ADAPTIVE_BANNER(
-                  width: MediaQuery.of(context).size.width.toInt(),
-                ),
+              child: AdWidget(
+                ad: homePageBanner,
               ),
             ),
           ],
