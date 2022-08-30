@@ -122,11 +122,16 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {});
   }
 
-  void onCopyButtonClick() => Clipboard.setData(
-        ClipboardData(
-          text: _readyNicknameController.text,
-        ),
-      );
+  void onCopyButtonClick() {
+    Clipboard.setData(
+      ClipboardData(
+        text: _readyNicknameController.text,
+      ),
+    );
+
+    showToast(
+        context, AppLocalizations.of(context)!.translate('copied_message')!);
+  }
 
   void onTransformOtherButtonClick() =>
       generateReadyName(_originalNameController.text);
