@@ -3,7 +3,7 @@ import 'dart:io';
 class AdMobService {
   String? getAdMobAppId() {
     if (Platform.isAndroid) {
-      return 'ca-app-pub-8743953761460890~5808507131';
+      return 'ca-app-pub-7893747770236345~9356173048';
     } else {
       return null;
     }
@@ -11,7 +11,7 @@ class AdMobService {
 
   String? getMainPageBannerAdId() {
     if (Platform.isAndroid) {
-      return 'ca-app-pub-8743953761460890/8051527095';
+      return 'ca-app-pub-7893747770236345/2407621315';
     } else {
       return null;
     }
