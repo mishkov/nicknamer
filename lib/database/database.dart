@@ -10,16 +10,16 @@ class DBProvider {
   DBProvider._();
   static final DBProvider db = DBProvider._();
 
-  static Database _database;
+  static Database? _database;
   Future<Database> get database async {
-    if (_database != null) return _database;
+    if (_database != null) return _database!;
 
     // if _database is null we instantiate it
     _database = await initDB();
-    return _database;
+    return _database!;
   }
 
-  initDB() async {
+  Future<Database> initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, "Nicknamer.db");
     return await openDatabase(path, version: 1, onOpen: (db) async {
@@ -44,22 +44,22 @@ class DBProvider {
     });
   }
 
-  getSetting(String setting) async {
+  Future<String> getSetting(String setting) async {
     final db = await database;
-    var res =
+    final res =
         await db.query("Settings", where: 'setting = ?', whereArgs: [setting]);
-    return (res.isNotEmpty ? res.first['value'] : "");
+    return (res.isNotEmpty ? res.first['value'] as String : "");
   }
 
   Future<Settings> getAllSettings() async {
-    final db = await database;
-    var res = await db.query("Settings");
+    final db = await (database);
+    final res = await db.query("Settings");
     return res.isNotEmpty ? Settings.fromJson(res) : Settings();
   }
 
   setSetting(String setting, String value) async {
-    final db = await database;
-    var res = await db.update("Settings", {'setting': setting, 'value': value});
+    final db = await (database);
+    final res = await db.update("Settings", {'setting': setting, 'value': value});
     return res;
   }
 }

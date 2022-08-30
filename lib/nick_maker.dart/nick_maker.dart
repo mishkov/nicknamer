@@ -20,9 +20,9 @@ class NickMaker {
         var isSymbolInUppercase = math.Random().nextBool();
 
         if (isSymbolInUppercase) {
-          nickname += uppercaseSymbols[symbolInLowerCase];
+          nickname += uppercaseSymbols[symbolInLowerCase]!;
         } else {
-          nickname += lowercaseSymbols[symbolInLowerCase];
+          nickname += lowercaseSymbols[symbolInLowerCase]!;
         }
       } else {
         nickname += source[i];

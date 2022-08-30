@@ -1,13 +1,13 @@
 class Settings {
   Settings({this.settings});
 
-  Map<String, String> settings;
+  Map<String?, String?>? settings;
 
   factory Settings.fromJson(List<Map<String, dynamic>> json) {
-    var settingsMap = Map<String, String>();
+    var settingsMap = Map<String?, String?>();
 
     json.forEach((element) {
-      String key = element['setting'];
+      String? key = element['setting'];
       settingsMap[key] = element['value'];
     });
 
@@ -15,9 +15,9 @@ class Settings {
   }
 
   List<Map<String, dynamic>> toJson() {
-    List<Map<String, String>> settingsList = [];
+    List<Map<String, String?>> settingsList = [];
 
-    settings.forEach((key, value) {
+    settings!.forEach((key, value) {
       settingsList.add({
         'setting': key,
         'value': value,
@@ -27,6 +27,6 @@ class Settings {
     return settingsList;
   }
 
-  String getValueOf(String setting) => settings[setting];
+  String? getValueOf(String setting) => settings![setting];
 
 }

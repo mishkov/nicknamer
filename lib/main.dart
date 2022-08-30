@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+
 import 'package:nicknamer/custom_toast/custom_toast.dart';
+import 'package:nicknamer/database/database.dart';
 import 'package:nicknamer/nick_maker.dart/nick_maker.dart';
 import 'package:nicknamer/services/admob_service.dart';
 import 'package:nicknamer/services/app_localizations.dart';
-import 'package:nicknamer/database/database.dart';
 import 'package:nicknamer/services/theme_controller.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  Admob.initialize();
+  MobileAds.instance.initialize();
 
   var theme = await DBProvider.db.getSetting('Theme');
   await ThemeController().load(theme);
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
       localizationsDelegates: [
         // ... app-specific localization delegate[s] here
         AppLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
@@ -46,7 +48,7 @@ class MyApp extends StatelessWidget {
         // Check if the current device locale is supported
         for (var supportedLocale in supportedLocales) {
           print('supportedLocale.languageCode: ${supportedLocale.languageCode},'
-              'locale.languageCode: ${locale.languageCode},'
+              'locale.languageCode: ${locale!.languageCode},'
               'supportedLocale.countryCode: ${supportedLocale.countryCode},'
               'locale.countryCode: ${locale.countryCode}');
           if (supportedLocale.languageCode == locale.languageCode &&
@@ -64,9 +66,9 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, this.title}) : super(key: key);
 
-  final String title;
+  final String? title;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -76,6 +78,18 @@ class _MyHomePageState extends State<MyHomePage> {
   final _adMobService = AdMobService();
   final _originalNameController = TextEditingController();
   final _readyNicknameController = TextEditingController();
+  BannerAd? homePageBanner;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    homePageBanner?.dispose();
+    super.dispose();
+  }
 
   void onChangeThemeButtonClick() async {
     var currentTheme = await DBProvider.db.getSetting('Theme');
@@ -87,13 +101,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
     if (newTheme == ThemeController.whiteTheme) {
       showToast(context,
-          AppLocalizations.of(context).translate('white_mode_on_message'));
+          AppLocalizations.of(context)!.translate('white_mode_on_message')!);
     } else if (newTheme == ThemeController.blackTheme) {
       showToast(context,
-          AppLocalizations.of(context).translate('dark_mode_on_message'));
+          AppLocalizations.of(context)!.translate('dark_mode_on_message')!);
     } else {
       showToast(context,
-          AppLocalizations.of(context).translate('android_theme_on_message'));
+          AppLocalizations.of(context)!.translate('android_theme_on_message')!);
     }
 
     setState(() {});
@@ -118,11 +132,22 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    homePageBanner = BannerAd(
+      adUnitId: _adMobService.getMainPageBannerAdId()!,
+      size: AdSize(
+        width: MediaQuery.of(context).size.width.toInt(),
+        height: 50,
+      ),
+      request: AdRequest(),
+      listener: BannerAdListener(),
+    );
+
+    homePageBanner!.load();
     return Scaffold(
       backgroundColor: ThemeController().getColor('background'),
       appBar: AppBar(
         title: Text(
-          widget.title,
+          widget.title!,
           style: TextStyle(
             color: ThemeController().getColor('app_bar_text'),
           ),
@@ -161,7 +186,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         labelStyle: TextStyle(
                             color: ThemeController()
                                 .getColor('text_form_input_text')),
-                        labelText: AppLocalizations.of(context)
+                        labelText: AppLocalizations.of(context)!
                             .translate('original_name_text_form_field'),
                         border: OutlineInputBorder(),
                         enabledBorder: OutlineInputBorder(
@@ -184,7 +209,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           labelStyle: TextStyle(
                               color: ThemeController()
                                   .getColor('text_form_input_text')),
-                          labelText: AppLocalizations.of(context)
+                          labelText: AppLocalizations.of(context)!
                               .translate('ready_nickname_text_form_field'),
                           border: OutlineInputBorder(),
                           enabledBorder: OutlineInputBorder(
@@ -205,8 +230,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                 .getColor('transform_other_button'),
                           ),
                           child: Text(
-                            AppLocalizations.of(context)
-                                .translate('transform_other_button'),
+                            AppLocalizations.of(context)!
+                                .translate('transform_other_button')!,
                             style: TextStyle(
                               color: ThemeController()
                                   .getColor('transform_other_button_text'),
@@ -219,8 +244,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             primary: ThemeController().getColor('copy_button'),
                           ),
                           child: Text(
-                            AppLocalizations.of(context)
-                                .translate('copy_button'),
+                            AppLocalizations.of(context)!
+                                .translate('copy_button')!,
                             style: TextStyle(
                               color: ThemeController()
                                   .getColor('copy_button_text'),
@@ -234,12 +259,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
-            Container(
-              child: AdmobBanner(
-                adUnitId: _adMobService.getMainPageBannerAdId(),
-                adSize: AdmobBannerSize.ADAPTIVE_BANNER(
-                  width: MediaQuery.of(context).size.width.toInt(),
-                ),
+            SizedBox(
+              height: homePageBanner!.size.height.toDouble(),
+              child: AdWidget(
+                ad: homePageBanner!,
               ),
             ),
           ],
