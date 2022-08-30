@@ -35,6 +35,7 @@ class MyApp extends StatelessWidget {
       localizationsDelegates: [
         // ... app-specific localization delegate[s] here
         AppLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
@@ -85,12 +86,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
     homePageBanner = BannerAd(
       adUnitId: _adMobService.getTestBannerAdId(),
-      size: AdSize.getPortraitInlineAdaptiveBannerAdSize(
-        MediaQuery.of(context).size.width.toInt(),
-      ),
+      size: AdSize.banner,
       request: AdRequest(),
       listener: BannerAdListener(),
     );
+
+    homePageBanner.load();
   }
 
   @override
