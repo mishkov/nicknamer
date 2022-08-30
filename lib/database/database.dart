@@ -10,8 +10,8 @@ class DBProvider {
   DBProvider._();
   static final DBProvider db = DBProvider._();
 
-  static Database _database;
-  Future<Database> get database async {
+  static Database? _database;
+  Future<Database?> get database async {
     if (_database != null) return _database;
 
     // if _database is null we instantiate it
@@ -45,20 +45,20 @@ class DBProvider {
   }
 
   getSetting(String setting) async {
-    final db = await database;
+    final db = await (database as FutureOr<Database>);
     var res =
         await db.query("Settings", where: 'setting = ?', whereArgs: [setting]);
     return (res.isNotEmpty ? res.first['value'] : "");
   }
 
   Future<Settings> getAllSettings() async {
-    final db = await database;
+    final db = await (database as FutureOr<Database>);
     var res = await db.query("Settings");
     return res.isNotEmpty ? Settings.fromJson(res) : Settings();
   }
 
   setSetting(String setting, String value) async {
-    final db = await database;
+    final db = await (database as FutureOr<Database>);
     var res = await db.update("Settings", {'setting': setting, 'value': value});
     return res;
   }

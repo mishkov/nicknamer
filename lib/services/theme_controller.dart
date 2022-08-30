@@ -8,7 +8,7 @@ class ThemeController {
   factory ThemeController() => _controller;
   ThemeController._internal();
 
-  Map<String, String> _colors;
+  late Map<String, String> _colors;
   static final autoTheme = 'Auto';
   static final whiteTheme = 'White';
   static final blackTheme = 'Black';
@@ -46,7 +46,7 @@ class ThemeController {
   List<String> get themes => List<String>.from(_availableThemes);
 
   Color getColor( String key ) =>
-      Color( int.parse( _colors[ key ].substring( 2 ), radix: 16 ) );
+      Color( int.parse( _colors[ key ]!.substring( 2 ), radix: 16 ) );
 
   String getNextTheme( String theme ) {
     final previousThemeIndex = _availableThemes.indexOf( theme );
