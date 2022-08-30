@@ -78,25 +78,16 @@ class _MyHomePageState extends State<MyHomePage> {
   final _adMobService = AdMobService();
   final _originalNameController = TextEditingController();
   final _readyNicknameController = TextEditingController();
-  late BannerAd homePageBanner;
+  BannerAd? homePageBanner;
 
   @override
   void initState() {
     super.initState();
-
-    homePageBanner = BannerAd(
-      adUnitId: _adMobService.getTestBannerAdId()!,
-      size: AdSize.banner,
-      request: AdRequest(),
-      listener: BannerAdListener(),
-    );
-
-    homePageBanner.load();
   }
 
   @override
   void dispose() {
-    homePageBanner.dispose();
+    homePageBanner?.dispose();
     super.dispose();
   }
 
@@ -141,6 +132,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    homePageBanner = BannerAd(
+      adUnitId: _adMobService.getMainPageBannerAdId()!,
+      size: AdSize(
+        width: MediaQuery.of(context).size.width.toInt(),
+        height: 50,
+      ),
+      request: AdRequest(),
+      listener: BannerAdListener(),
+    );
+
+    homePageBanner!.load();
     return Scaffold(
       backgroundColor: ThemeController().getColor('background'),
       appBar: AppBar(
@@ -257,9 +259,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
-            Container(
+            SizedBox(
+              height: homePageBanner!.size.height.toDouble(),
               child: AdWidget(
-                ad: homePageBanner,
+                ad: homePageBanner!,
               ),
             ),
           ],
