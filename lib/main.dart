@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -13,9 +14,15 @@ import 'package:nicknamer/services/theme_controller.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  MobileAds.instance.initialize();
+  if (defaultTargetPlatform == TargetPlatform.iOS ||
+      defaultTargetPlatform == TargetPlatform.android) {
+    MobileAds.instance.initialize();
+  }
 
-  var theme = await DBProvider.db.getSetting('Theme');
+  String? theme;
+  if (!kIsWeb) {
+    theme = await DBProvider.db.getSetting('Theme');
+  }
   await ThemeController().load(theme);
 
   runApp(MyApp());
@@ -78,21 +85,21 @@ class _MyHomePageState extends State<MyHomePage> {
   final _adMobService = AdMobService();
   final _originalNameController = TextEditingController();
   final _readyNicknameController = TextEditingController();
-  BannerAd? homePageBanner;
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  BannerAd? _homePageBanner;
 
   @override
   void dispose() {
-    homePageBanner?.dispose();
+    if (defaultTargetPlatform == TargetPlatform.iOS ||
+        defaultTargetPlatform == TargetPlatform.android) {
+      _homePageBanner?.dispose();
+    }
     super.dispose();
   }
 
   void onChangeThemeButtonClick() async {
     var currentTheme = await DBProvider.db.getSetting('Theme');
+    // TODO: Implemnt better null error catch
+    if (currentTheme == null) return;
     var newTheme = ThemeController().getNextTheme(currentTheme);
 
     await DBProvider.db.setSetting('Theme', newTheme);
@@ -132,17 +139,21 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    homePageBanner = BannerAd(
-      adUnitId: _adMobService.getMainPageBannerAdId()!,
-      size: AdSize(
-        width: MediaQuery.of(context).size.width.toInt(),
-        height: 50,
-      ),
-      request: AdRequest(),
-      listener: BannerAdListener(),
-    );
+    if (defaultTargetPlatform == TargetPlatform.iOS ||
+        defaultTargetPlatform == TargetPlatform.android) {
+      _homePageBanner = BannerAd(
+        adUnitId: _adMobService.getMainPageBannerAdId()!,
+        size: AdSize(
+          width: MediaQuery.of(context).size.width.toInt(),
+          height: 50,
+        ),
+        request: AdRequest(),
+        listener: BannerAdListener(),
+      );
 
-    homePageBanner!.load();
+      _homePageBanner!.load();
+    }
+
     return Scaffold(
       backgroundColor: ThemeController().getColor('background'),
       appBar: AppBar(
@@ -154,13 +165,15 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         backgroundColor: ThemeController().getColor('app_bar'),
         actions: <Widget>[
-          IconButton(
-            icon: Icon(
-              Icons.brightness_6,
-              color: ThemeController().getColor('app_bar_button'),
-            ),
-            onPressed: onChangeThemeButtonClick,
-          ),
+          kIsWeb
+              ? SizedBox.shrink()
+              : IconButton(
+                  icon: Icon(
+                    Icons.brightness_6,
+                    color: ThemeController().getColor('app_bar_button'),
+                  ),
+                  onPressed: onChangeThemeButtonClick,
+                ),
         ],
       ),
       body: Center(
@@ -259,12 +272,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
-            SizedBox(
-              height: homePageBanner!.size.height.toDouble(),
-              child: AdWidget(
-                ad: homePageBanner!,
-              ),
-            ),
+            defaultTargetPlatform == TargetPlatform.iOS ||
+                    defaultTargetPlatform == TargetPlatform.android
+                ? SizedBox(
+                    height: _homePageBanner!.size.height.toDouble(),
+                    child: AdWidget(
+                      ad: _homePageBanner!,
+                    ),
+                  )
+                : SizedBox.shrink(),
           ],
         ),
       ),
