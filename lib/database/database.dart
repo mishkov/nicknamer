@@ -44,11 +44,11 @@ class DBProvider {
     });
   }
 
-  Future<String> getSetting(String setting) async {
+  Future<String?> getSetting(String setting) async {
     final db = await database;
     final res =
         await db.query("Settings", where: 'setting = ?', whereArgs: [setting]);
-    return (res.isNotEmpty ? res.first['value'] as String : "");
+    return res.isNotEmpty ? res.first['value'] as String? : null;
   }
 
   Future<Settings> getAllSettings() async {
