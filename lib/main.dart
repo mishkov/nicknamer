@@ -29,7 +29,7 @@ Future<void> main() async {
     return Scaffold(
       body: Center(
         child: Text(
-          'Error\n\n${details.exception}',
+          'Error\n${details.exception}\n${details.summary}\n${details.stack}',
           style: TextStyle(color: Colors.red),
         ),
       ),
