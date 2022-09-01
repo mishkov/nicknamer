@@ -183,8 +183,6 @@ class _MyHomePageState extends State<MyHomePage> {
       _homePageBanner!.load();
     }
 
-    null!.ad();
-
     return Scaffold(
       backgroundColor: ThemeController().getColor('background'),
       appBar: AppBar(
