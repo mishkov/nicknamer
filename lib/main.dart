@@ -16,6 +16,28 @@ import 'package:nicknamer/services/theme_controller.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  ErrorWidget.builder = (FlutterErrorDetails details) {
+    bool inDebug = false;
+    assert(() {
+      inDebug = true;
+      return true;
+    }());
+    // In debug mode, use the normal error widget which shows
+    // the error message:
+    if (inDebug) return ErrorWidget(details.exception);
+    // In release builds, show a yellow-on-blue message instead:
+    return Container(
+      height: 400,
+      width: 500,
+      alignment: Alignment.center,
+      child: Text(
+        'Error! ${details.exception}',
+        style: TextStyle(color: Colors.yellow),
+        textDirection: TextDirection.ltr,
+      ),
+    );
+  };
+
   if (defaultTargetPlatform == TargetPlatform.iOS ||
       defaultTargetPlatform == TargetPlatform.android) {
     MobileAds.instance.initialize();
@@ -161,6 +183,8 @@ class _MyHomePageState extends State<MyHomePage> {
       _homePageBanner!.load();
     }
 
+    null!.ad();
+
     return Scaffold(
       backgroundColor: ThemeController().getColor('background'),
       appBar: AppBar(
@@ -188,9 +212,9 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 38),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 38),
+              child: Expanded(
                 child: LayoutBuilder(builder: (context, constraints) {
                   const maxContentWidth = 600.0;
                   double contentWidth = math.min(
