@@ -5,6 +5,6 @@
   "copy_button": "COPY",
   "dark_mode_on_message": "dark mode on",
   "white_mode_on_message": "white mode on",
-  "android_theme_on_message": "android theme on",
+  "android_theme_on_message": "system theme on",
   "copied_message": "Nickname copied"
 }

@@ -16,9 +16,35 @@ import 'package:nicknamer/services/theme_controller.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  if (defaultTargetPlatform == TargetPlatform.iOS ||
-      defaultTargetPlatform == TargetPlatform.android) {
-    MobileAds.instance.initialize();
+  ErrorWidget.builder = (FlutterErrorDetails details) {
+    bool inDebug = false;
+    assert(() {
+      inDebug = true;
+      return true;
+    }());
+    // In debug mode, use the normal error widget which shows
+    // the error message:
+    if (inDebug) return ErrorWidget(details.exception);
+    // In release builds, show a yellow-on-blue message instead:
+    return Scaffold(
+      appBar: AppBar(title: const Text('Error')),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            '${details.exception}\n\n${details.summary}\n\n${details.stack}',
+            style: TextStyle(color: Colors.red),
+          ),
+        ),
+      ),
+    );
+  };
+
+  if (!kIsWeb) {
+    if (defaultTargetPlatform == TargetPlatform.iOS ||
+        defaultTargetPlatform == TargetPlatform.android) {
+      MobileAds.instance.initialize();
+    }
   }
 
   String? theme;
@@ -91,10 +117,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void dispose() {
-    if (defaultTargetPlatform == TargetPlatform.iOS ||
-        defaultTargetPlatform == TargetPlatform.android) {
-      _homePageBanner?.dispose();
+    if (!kIsWeb) {
+      if (defaultTargetPlatform == TargetPlatform.iOS ||
+          defaultTargetPlatform == TargetPlatform.android) {
+        _homePageBanner?.dispose();
+      }
     }
+
     super.dispose();
   }
 
@@ -146,19 +175,21 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    if (defaultTargetPlatform == TargetPlatform.iOS ||
-        defaultTargetPlatform == TargetPlatform.android) {
-      _homePageBanner = BannerAd(
-        adUnitId: _adMobService.getMainPageBannerAdId()!,
-        size: AdSize(
-          width: MediaQuery.of(context).size.width.toInt(),
-          height: 50,
-        ),
-        request: AdRequest(),
-        listener: BannerAdListener(),
-      );
+    if (!kIsWeb) {
+      if (defaultTargetPlatform == TargetPlatform.iOS ||
+          defaultTargetPlatform == TargetPlatform.android) {
+        _homePageBanner = BannerAd(
+          adUnitId: _adMobService.getMainPageBannerAdId()!,
+          size: AdSize(
+            width: MediaQuery.of(context).size.width.toInt(),
+            height: 50,
+          ),
+          request: AdRequest(),
+          listener: BannerAdListener(),
+        );
 
-      _homePageBanner!.load();
+        _homePageBanner!.load();
+      }
     }
 
     return Scaffold(
@@ -291,15 +322,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 }),
               ),
             ),
-            defaultTargetPlatform == TargetPlatform.iOS ||
-                    defaultTargetPlatform == TargetPlatform.android
-                ? SizedBox(
-                    height: _homePageBanner!.size.height.toDouble(),
-                    child: AdWidget(
-                      ad: _homePageBanner!,
-                    ),
-                  )
-                : SizedBox.shrink(),
+            !kIsWeb
+                ? defaultTargetPlatform == TargetPlatform.iOS ||
+                        defaultTargetPlatform == TargetPlatform.android
+                    ? SizedBox(
+                        height: _homePageBanner!.size.height.toDouble(),
+                        child: AdWidget(
+                          ad: _homePageBanner!,
+                        ),
+                      )
+                    : SizedBox.shrink()
+                : SizedBox.shrink()
           ],
         ),
       ),
