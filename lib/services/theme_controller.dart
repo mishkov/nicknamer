@@ -14,7 +14,8 @@ class ThemeController {
   static final blackTheme = 'Black';
   final List<String> _availableThemes = [autoTheme, whiteTheme, blackTheme];
 
-  Future<bool> load(String theme) async {
+  Future<bool> load(String? theme) async {
+    theme ??= 'Auto';
     assert(_availableThemes.contains(theme));
     theme = theme.toLowerCase();
     String jsonString;
@@ -45,15 +46,15 @@ class ThemeController {
   //return copy of list
   List<String> get themes => List<String>.from(_availableThemes);
 
-  Color getColor( String key ) =>
-      Color( int.parse( _colors[ key ]!.substring( 2 ), radix: 16 ) );
+  Color getColor(String key) =>
+      Color(int.parse(_colors[key]!.substring(2), radix: 16));
 
-  String getNextTheme( String theme ) {
-    final previousThemeIndex = _availableThemes.indexOf( theme );
+  String getNextTheme(String theme) {
+    final previousThemeIndex = _availableThemes.indexOf(theme);
     final nextThemeIndex = previousThemeIndex + 1;
 
-    if ( nextThemeIndex < _availableThemes.length ) {
-      return _availableThemes[ nextThemeIndex ];
+    if (nextThemeIndex < _availableThemes.length) {
+      return _availableThemes[nextThemeIndex];
     } else {
       return _availableThemes.first;
     }
