@@ -26,14 +26,12 @@ Future<void> main() async {
     // the error message:
     if (inDebug) return ErrorWidget(details.exception);
     // In release builds, show a yellow-on-blue message instead:
-    return Container(
-      height: 400,
-      width: 500,
-      alignment: Alignment.center,
-      child: Text(
-        'Error! ${details.exception}',
-        style: TextStyle(color: Colors.yellow),
-        textDirection: TextDirection.ltr,
+    return Scaffold(
+      body: Center(
+        child: Text(
+          'Error\n\n${details.exception}',
+          style: TextStyle(color: Colors.red),
+        ),
       ),
     );
   };
@@ -210,9 +208,9 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 38),
-              child: Expanded(
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 38),
                 child: LayoutBuilder(builder: (context, constraints) {
                   const maxContentWidth = 600.0;
                   double contentWidth = math.min(
